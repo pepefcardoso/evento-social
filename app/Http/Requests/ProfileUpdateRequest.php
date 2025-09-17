@@ -15,6 +15,8 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $minDate = Carbon::now()->subYears(18)->toDateString();
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -25,6 +27,17 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'birth_date' => ['required', 'date', 'before_or_equal:' . $minDate],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[\d\s\(\)\-\+]+$/'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'birth_date.before_or_equal' => 'O usuário deve ter no mínimo 18 anos.',
+            'birth_date.required' => 'A data de nascimento é obrigatória.',
+            'phone.regex' => 'O telefone deve conter apenas números.',
         ];
     }
 }

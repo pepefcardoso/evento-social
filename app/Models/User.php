@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'birth_date',
+        'phone',
     ];
 
     /**
@@ -43,6 +45,27 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
         ];
     }
+
+    // public function getAgeAttribute()
+    // {
+    //     return $this->birth_date ? $this->birth_date->age : null;
+    // }
+
+    // public function getFormattedPhoneAttribute()
+    // {
+    //     if (!$this->phone) {
+    //         return null;
+    //     }
+
+    //     $phone = preg_replace('/[^0-9]/', '', $this->phone);
+
+    //     if (strlen($phone) === 11) {
+    //         return '(' . substr($phone, 0, 2) . ') ' . substr($phone, 2, 5) . '-' . substr($phone, 7);
+    //     }
+
+    //     return $this->phone;
+    // }
 }
