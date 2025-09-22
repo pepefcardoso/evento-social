@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
         $this->call(SkillSeeder::class);
+        $this->call(InstituteSeeder::class);
     }
 }
