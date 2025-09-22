@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\InstituteController;
+use App\Http\Controllers\EventController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('skills', SkillController::class);
     Route::resource('institutes', InstituteController::class);
+    Route::resource('events', EventController::class);
 });
 
 require __DIR__.'/auth.php';
