@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('telefone')->nullable();
             $table->text('sobre')->nullable();
             $table->string('website')->nullable();
+            $table->foreignId('address_id')->nullable()->constrained('addresses')->onDelete('set null');
             $table->timestamps();
         });
     }

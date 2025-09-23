@@ -17,6 +17,7 @@ class Event extends Model
         'end_date',
         'status',
         'institute_id',
+        'address_id',
     ];
 
     protected function casts(): array
@@ -27,6 +28,11 @@ class Event extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
     }
 
     public function institute(): BelongsTo

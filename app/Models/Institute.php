@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Institute extends Model
@@ -17,6 +18,7 @@ class Institute extends Model
         'telefone',
         'sobre',
         'website',
+        'address_id',
     ];
 
     protected function casts(): array
@@ -25,6 +27,11 @@ class Institute extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
     }
 
     public function events(): HasMany

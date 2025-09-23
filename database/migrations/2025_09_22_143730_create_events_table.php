@@ -19,6 +19,7 @@ return new class extends Migration
             $table->datetime('end_date');
             $table->enum('status', ['draft', 'published', 'cancelled'])->default('draft');
             $table->foreignId('institute_id')->constrained()->onDelete('cascade');
+            $table->foreignId('address_id')->nullable()->constrained('addresses')->onDelete('set null');
             $table->timestamps();
         });
     }
