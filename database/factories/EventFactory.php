@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Institute;
+use App\Models\Address;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
@@ -24,8 +26,9 @@ class EventFactory extends Factory
             'description' => $this->faker->paragraph(),
             'start_date' => $start,
             'end_date' => $end,
-            'status' => $this->faker->randomElement(['draft', 'published', 'canceled']),
+            'status' => $this->faker->randomElement(['draft', 'published', 'cancelled']),
             'institute_id' => Institute::factory(),
+            'address_id' => Address::factory(),
         ];
     }
 }

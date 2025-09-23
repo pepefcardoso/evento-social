@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Address;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Institute>
@@ -16,10 +17,11 @@ class InstituteFactory extends Factory
             'cnpj' => $this->faker->unique()->numerify('##############'),
             'email' => $this->faker->unique()->companyEmail(),
             'telefone' => preg_replace('/\D+/', '', $this->faker->phoneNumber()),
-            'sobre' => $this->faker->optional()->paragraph(),
-            'website' => $this->faker->optional()->url(),
+            'sobre' => $this->faker->paragraph(),
+            'website' => $this->faker->url(),
             'created_at' => now(),
             'updated_at' => now(),
+            'address_id' => Address::factory(),
         ];
     }
 }
