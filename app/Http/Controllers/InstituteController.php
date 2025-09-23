@@ -5,19 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Institute;
 use App\Http\Requests\StoreInstituteRequest;
 use App\Http\Requests\UpdateInstituteRequest;
+use App\Services\InstituteService;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class InstituteController extends Controller
 {
-    public function __construct()
+    protected InstituteService $instituteService;
+
+    public function __construct(InstituteService $instituteService)
     {
         $this->authorizeResource(Institute::class, 'institute');
+        $this->instituteService = $instituteService;
     }
 
     public function index()
     {
-        $institutes = Institute::latest()->paginate(10);
+        $institutes = Institute::with('address')->latest()->paginate(10);
 
         return Inertia::render('Institutes/Index', [
             'institutes' => $institutes,
@@ -31,15 +35,15 @@ class InstituteController extends Controller
 
     public function store(StoreInstituteRequest $request)
     {
-        $validated = $request->validated();
-
-        Institute::create($validated);
+        $this->instituteService->createInstitute($request->validated());
 
         return Redirect::route('institutes.index')->with('message', 'Instituição criada com sucesso!');
     }
 
     public function show(Institute $institute)
     {
+        $institute->load('address');
+
         return Inertia::render('Institutes/Show', [
             'institute' => $institute,
         ]);
@@ -47,6 +51,8 @@ class InstituteController extends Controller
 
     public function edit(Institute $institute)
     {
+        $institute->load('address');
+
         return Inertia::render('Institutes/Edit', [
             'institute' => $institute,
         ]);
@@ -54,9 +60,7 @@ class InstituteController extends Controller
 
     public function update(UpdateInstituteRequest $request, Institute $institute)
     {
-        $validated = $request->validated();
-
-        $institute->update($validated);
+        $this->instituteService->updateInstitute($institute, $request->validated());
 
         return Redirect::route('institutes.index')->with('message', 'Instituição atualizada com sucesso!');
     }

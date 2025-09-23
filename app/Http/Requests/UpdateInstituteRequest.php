@@ -7,6 +7,9 @@ use Illuminate\Validation\Rule;
 
 class UpdateInstituteRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
@@ -20,21 +23,31 @@ class UpdateInstituteRequest extends FormRequest
         if ($this->has('telefone')) {
             $this->merge(['telefone' => preg_replace('/\D+/', '', $this->input('telefone'))]);
         }
+        if ($this->has('postal_code')) {
+            $this->merge(['postal_code' => preg_replace('/\D+/', '', $this->input('postal_code'))]);
+        }
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         $instituteId = $this->route('institute')?->id;
 
         return [
-            'razao_social' => ['required', 'string', 'max:255'],
+            'razao_social' => ['sometimes', 'required', 'string', 'max:255'],
             'cnpj' => [
+                'sometimes',
                 'required',
                 'string',
                 'size:14',
                 Rule::unique('institutes', 'cnpj')->ignore($instituteId),
             ],
             'email' => [
+                'sometimes',
                 'required',
                 'email',
                 'max:255',
@@ -43,6 +56,47 @@ class UpdateInstituteRequest extends FormRequest
             'telefone' => ['nullable', 'string', 'max:20'],
             'sobre' => ['nullable', 'string'],
             'website' => ['nullable', 'url', 'max:255'],
+            'street' => ['sometimes', 'required', 'string', 'max:255'],
+            'number' => ['sometimes', 'required', 'string', 'max:20'],
+            'complement' => ['nullable', 'string', 'max:100'],
+            'neighborhood' => ['sometimes', 'required', 'string', 'max:100'],
+            'city' => ['sometimes', 'required', 'string', 'max:100'],
+            'state' => ['sometimes', 'required', 'string', 'size:2'],
+            'postal_code' => ['sometimes', 'required', 'string', 'size:8'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'razao_social.required' => 'A razão social é obrigatória.',
+            'razao_social.max' => 'A razão social não pode ter mais de 255 caracteres.',
+            'cnpj.required' => 'O CNPJ é obrigatório.',
+            'cnpj.size' => 'O CNPJ deve ter 14 dígitos.',
+            'cnpj.unique' => 'Este CNPJ já está em uso.',
+            'email.required' => 'O e-mail é obrigatório.',
+            'email.email' => 'Forneça um e-mail válido.',
+            'email.max' => 'O e-mail não pode ter mais de 255 caracteres.',
+            'email.unique' => 'Este e-mail já está em uso.',
+            'website.url' => 'A URL do website é inválida.',
+            'street.required' => 'A rua é obrigatória.',
+            'street.max' => 'A rua não pode ter mais de 255 caracteres.',
+            'number.required' => 'O número é obrigatório.',
+            'number.max' => 'O número não pode ter mais de 20 caracteres.',
+            'complement.max' => 'O complemento não pode ter mais de 100 caracteres.',
+            'neighborhood.required' => 'O bairro é obrigatório.',
+            'neighborhood.max' => 'O bairro não pode ter mais de 100 caracteres.',
+            'city.required' => 'A cidade é obrigatória.',
+            'city.max' => 'A cidade não pode ter mais de 100 caracteres.',
+            'state.required' => 'O estado é obrigatório.',
+            'state.size' => 'O estado deve ter exatamente 2 caracteres.',
+            'postal_code.required' => 'O CEP é obrigatório.',
+            'postal_code.size' => 'O CEP deve ter 8 dígitos.',
         ];
     }
 }

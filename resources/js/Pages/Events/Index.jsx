@@ -5,7 +5,6 @@ import { useState } from "react";
 export default function Index({ events }) {
     const [isDeleting, setIsDeleting] = useState(null);
 
-    // Função para deletar um evento com confirmação
     const handleDelete = (event) => {
         if (
             confirm(`Tem certeza que deseja deletar o evento "${event.title}"?`)
@@ -17,7 +16,6 @@ export default function Index({ events }) {
         }
     };
 
-    // Formata o status para melhor leitura
     const formatStatus = (status) => {
         const statuses = {
             draft: { text: "Rascunho", color: "gray" },

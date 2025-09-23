@@ -107,6 +107,43 @@ export default function Show({ institute }) {
                                     </div>
                                 </div>
 
+                                <div>
+                                    <dt className="text-sm font-medium text-gray-500">
+                                        Endereço
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900">
+                                        {institute.address ? (
+                                            <>
+                                                <span>
+                                                    {`${institute.address.street}, ${institute.address.number}`}
+                                                    {institute.address
+                                                        .complement &&
+                                                        ` - ${institute.address.complement}`}
+                                                </span>
+                                                <br />
+                                                <span>
+                                                    {`${
+                                                        institute.address
+                                                            .neighborhood
+                                                    }, ${
+                                                        institute.address.city
+                                                    } - ${institute.address.state.toUpperCase()}`}
+                                                </span>
+                                                <br />
+                                                <span>
+                                                    CEP:{" "}
+                                                    {
+                                                        institute.address
+                                                            .postal_code
+                                                    }
+                                                </span>
+                                            </>
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </dd>
+                                </div>
+
                                 <div className="space-y-4">
                                     <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
                                         Informações de Data

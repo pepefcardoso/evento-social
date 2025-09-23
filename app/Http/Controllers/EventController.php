@@ -6,19 +6,23 @@ use App\Models\Event;
 use App\Models\Institute;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Services\EventService;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class EventController extends Controller
 {
-    public function __construct()
+    protected EventService $eventService;
+
+    public function __construct(EventService $eventService)
     {
         $this->authorizeResource(Event::class, 'event');
+        $this->eventService = $eventService;
     }
 
     public function index()
     {
-        $events = Event::with('institute')
+        $events = Event::with('institute', 'address')
             ->latest()
             ->paginate(10);
 
@@ -38,16 +42,14 @@ class EventController extends Controller
 
     public function store(StoreEventRequest $request)
     {
-        $validated = $request->validated();
-
-        Event::create($validated);
+        $this->eventService->createEvent($request->validated());
 
         return Redirect::route('events.index')->with('message', 'Evento criado com sucesso!');
     }
 
     public function show(Event $event)
     {
-        $event->load('institute');
+        $event->load('institute', 'address');
 
         return Inertia::render('Events/Show', [
             'event' => $event,
@@ -56,7 +58,7 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
-        $event->load('institute');
+        $event->load('institute', 'address');
         $institutes = Institute::orderBy('razao_social')->get();
 
         return Inertia::render('Events/Edit', [
@@ -67,9 +69,7 @@ class EventController extends Controller
 
     public function update(UpdateEventRequest $request, Event $event)
     {
-        $validated = $request->validated();
-
-        $event->update($validated);
+        $this->eventService->updateEvent($event, $request->validated());
 
         return Redirect::route('events.index')->with('message', 'Evento atualizado com sucesso!');
     }

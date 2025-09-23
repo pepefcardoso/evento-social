@@ -92,6 +92,35 @@ export default function Show({ event }) {
                                 </div>
                             </div>
 
+                            <div className="mt-8">
+                                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                                    📍 Localização
+                                </h3>
+                                <div className="bg-gray-50 p-4 rounded-lg text-gray-800">
+                                    {event.address ? (
+                                        <>
+                                            <p className="font-semibold">
+                                                {`${event.address.street}, ${event.address.number}`}
+                                                {event.address.complement &&
+                                                    ` - ${event.address.complement}`}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {`${
+                                                    event.address.neighborhood
+                                                }, ${
+                                                    event.address.city
+                                                } - ${event.address.state.toUpperCase()}`}
+                                            </p>
+                                            <p className="text-sm text-gray-600 mt-1">
+                                                CEP: {event.address.postal_code}
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <p>Endereço não informado.</p>
+                                    )}
+                                </div>
+                            </div>
+
                             {event.description && (
                                 <div className="mt-8">
                                     <h3 className="text-lg font-medium text-gray-900 mb-2">
