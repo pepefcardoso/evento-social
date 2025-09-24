@@ -89,6 +89,9 @@ export default function Index({ events }) {
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Status
                                                 </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Categorias
+                                                </th>
                                                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Ações
                                                 </th>
@@ -130,6 +133,24 @@ export default function Index({ events }) {
                                                         {formatStatus(
                                                             event.status
                                                         )}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <div className="flex flex-wrap gap-1">
+                                                            {event.categories.map(
+                                                                (category) => (
+                                                                    <span
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                        className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800"
+                                                                    >
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                )
+                                                            )}
+                                                        </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                         <div className="flex justify-end space-x-2">

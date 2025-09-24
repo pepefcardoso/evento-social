@@ -17,7 +17,7 @@ class EventCategoryController extends Controller
 
     public function index()
     {
-        $eventCategories = EventCategory::latest()->paginate(10);
+       $eventCategories = EventCategory::withCount('events')->latest()->paginate(10);
 
         return Inertia::render('EventCategories/Index', [
             'eventCategories' => $eventCategories,
@@ -59,6 +59,11 @@ class EventCategoryController extends Controller
 
     public function destroy(EventCategory $eventCategory)
     {
+        if ($eventCategory->events()->exists()) {
+            return Redirect::route('event-categories.index')
+                ->with('error', 'Esta categoria não pode ser removida pois está associada a um ou mais eventos.');
+        }
+
         $eventCategory->delete();
 
         return Redirect::route('event-categories.index')->with('message', 'Categoria removida com sucesso!');

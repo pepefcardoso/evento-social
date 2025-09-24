@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class EventService
 {
@@ -21,13 +22,21 @@ class EventService
     public function createEvent(array $validatedData): Event
     {
         $addressData = Arr::only($validatedData, ['street', 'number', 'complement', 'neighborhood', 'city', 'state', 'postal_code']);
+        $categoryIds = Arr::pull($validatedData, 'categories');
         $eventData = Arr::except($validatedData, array_keys($addressData));
 
-        $address = $this->addressService->findOrCreate($addressData);
+        return DB::transaction(function () use ($eventData, $addressData, $categoryIds) {
+            $address = $this->addressService->findOrCreate($addressData);
+            $eventData['address_id'] = $address->id;
 
-        $eventData['address_id'] = $address->id;
+            $event = Event::create($eventData);
 
-        return Event::create($eventData);
+            if (!empty($categoryIds)) {
+                $event->categories()->attach($categoryIds);
+            }
+
+            return $event;
+        });
     }
 
     /**
@@ -38,13 +47,20 @@ class EventService
     public function updateEvent(Event $event, array $validatedData): void
     {
         $addressData = Arr::only($validatedData, ['street', 'number', 'complement', 'neighborhood', 'city', 'state', 'postal_code']);
+        $categoryIds = Arr::pull($validatedData, 'categories');
         $eventData = Arr::except($validatedData, array_keys($addressData));
 
-        if (!empty($addressData)) {
-            $address = $this->addressService->findOrCreate($addressData);
-            $eventData['address_id'] = $address->id;
-        }
+        DB::transaction(function () use ($event, $eventData, $addressData, $categoryIds) {
+            if (!empty($addressData)) {
+                $address = $this->addressService->findOrCreate($addressData);
+                $eventData['address_id'] = $address->id;
+            }
 
-        $event->update($eventData);
+            $event->update($eventData);
+
+            if (!is_null($categoryIds)) {
+                $event->categories()->sync($categoryIds);
+            }
+        });
     }
 }

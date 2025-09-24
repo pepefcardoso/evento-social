@@ -26,7 +26,17 @@ export default function Edit({ event, institutes }) {
         neighborhood: event.address?.neighborhood || "",
         city: event.address?.city || "",
         state: event.address?.state || "",
+        categories: event.categories?.map((category) => category.id) || [],
     });
+
+    const handleCategoryChange = (categoryId) => {
+        const currentCategories = data.categories;
+        const newCategories = currentCategories.includes(categoryId)
+            ? currentCategories.filter((id) => id !== categoryId)
+            : [...currentCategories, categoryId];
+
+        setData("categories", newCategories);
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -75,6 +85,39 @@ export default function Edit({ event, institutes }) {
                                     />
                                     <InputError
                                         message={errors.title}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel value="Categorias" />
+                                    <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-4">
+                                        {allCategories.map((category) => (
+                                            <label
+                                                key={category.id}
+                                                className="flex items-center"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                    value={category.id}
+                                                    checked={data.categories.includes(
+                                                        category.id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleCategoryChange(
+                                                            category.id
+                                                        )
+                                                    }
+                                                />
+                                                <span className="ms-2 text-sm text-gray-600">
+                                                    {category.name}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <InputError
+                                        message={errors.categories}
                                         className="mt-2"
                                     />
                                 </div>

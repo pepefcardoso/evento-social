@@ -2,24 +2,22 @@
 
 namespace Database\Factories;
 
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Institute;
 use App\Models\Address;
+use App\Models\EventCategory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
- */
 class EventFactory extends Factory
 {
     /**
      * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         $start = $this->faker->dateTimeBetween('now', '+1 month');
-        $end = (clone $start)->modify('+'.rand(1, 7).' days');
+        $end = (clone $start)->modify('+' . rand(1, 7) . ' days');
 
         return [
             'title' => $this->faker->sentence(3),
@@ -30,5 +28,20 @@ class EventFactory extends Factory
             'institute_id' => Institute::factory(),
             'address_id' => Address::factory(),
         ];
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Event $event) {
+            $categoryIds = EventCategory::all()->pluck('id');
+
+            if ($categoryIds->isNotEmpty()) {
+                $categoriesToAttach = $categoryIds->random(rand(1, 3))->toArray();
+                $event->categories()->attach($categoriesToAttach);
+            }
+        });
     }
 }

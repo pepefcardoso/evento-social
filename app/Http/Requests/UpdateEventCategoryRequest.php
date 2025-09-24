@@ -9,6 +9,10 @@ class UpdateEventCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        $category = $this->route('event_category');
+        if ($category && $category->events()->exists()) {
+            return false;
+        }
         return true;
     }
 

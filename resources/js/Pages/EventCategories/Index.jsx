@@ -70,6 +70,9 @@ export default function Index({ eventCategories }) {
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Descrição
                                                 </th>
+                                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Nº de Eventos
+                                                </th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Data de Criação
                                                 </th>
@@ -96,6 +99,11 @@ export default function Index({ eventCategories }) {
                                                                 category.description,
                                                                 40
                                                             )}
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">
+                                                            <span className="px-3 py-1 text-sm font-semibold rounded-full bg-gray-200 text-gray-800">
+                                                                {category.events_count}
+                                                            </span>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                             {new Date(

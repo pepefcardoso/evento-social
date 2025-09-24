@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventCategory;
 use App\Models\Institute;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
@@ -22,7 +23,7 @@ class EventController extends Controller
 
     public function index()
     {
-        $events = Event::with('institute', 'address')
+        $events = Event::with('institute', 'address', 'categories')
             ->latest()
             ->paginate(10);
 
@@ -34,22 +35,23 @@ class EventController extends Controller
     public function create()
     {
         $institutes = Institute::orderBy('razao_social')->get();
+        $allCategories = EventCategory::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Events/Create', [
             'institutes' => $institutes,
+            'allCategories' => $allCategories,
         ]);
     }
 
     public function store(StoreEventRequest $request)
     {
         $this->eventService->createEvent($request->validated());
-
         return Redirect::route('events.index')->with('message', 'Evento criado com sucesso!');
     }
 
     public function show(Event $event)
     {
-        $event->load('institute', 'address');
+        $event->load('institute', 'address', 'categories');
 
         return Inertia::render('Events/Show', [
             'event' => $event,
@@ -58,26 +60,27 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
-        $event->load('institute', 'address');
+        $event->load('institute', 'address', 'categories');
+
         $institutes = Institute::orderBy('razao_social')->get();
+        $allCategories = EventCategory::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Events/Edit', [
             'event' => $event,
             'institutes' => $institutes,
+            'allCategories' => $allCategories,
         ]);
     }
 
     public function update(UpdateEventRequest $request, Event $event)
     {
         $this->eventService->updateEvent($event, $request->validated());
-
         return Redirect::route('events.index')->with('message', 'Evento atualizado com sucesso!');
     }
 
     public function destroy(Event $event)
     {
         $event->delete();
-
         return Redirect::route('events.index')->with('message', 'Evento removido com sucesso!');
     }
 }

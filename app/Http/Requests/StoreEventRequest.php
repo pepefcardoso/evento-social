@@ -33,7 +33,9 @@ class StoreEventRequest extends FormRequest
             'neighborhood' => ['required', 'string', 'max:100'],
             'city' => ['required', 'string', 'max:100'],
             'state' => ['required', 'string', 'size:2'],
-            'postal_code' => ['required', 'string', 'size:8']
+            'postal_code' => ['required', 'string', 'size:8'],
+            'categories' => ['required', 'array', 'min:1'],
+            'categories.*' => ['exists:event_categories,id'],
         ];
     }
 
@@ -63,6 +65,9 @@ class StoreEventRequest extends FormRequest
             'state.size' => 'O estado deve ter exatamente 2 caracteres.',
             'postal_code.required' => 'O CEP é obrigatório.',
             'postal_code.size' => 'O CEP deve ter 8 dígitos.',
+            'categories.required' => 'É obrigatório selecionar pelo menos uma categoria.',
+            'categories.min' => 'É obrigatório selecionar pelo menos uma categoria.',
+            'categories.*.exists' => 'A categoria selecionada é inválida.',
         ];
     }
 }

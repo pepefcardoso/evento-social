@@ -126,6 +126,42 @@ export default function Show({ eventCategory }) {
                                     </div>
                                 </dl>
                             </div>
+
+                            <div>
+                                <h3 className="text-lg font-medium text-gray-900 mb-4">
+                                    🗓️ Eventos Utilizando Esta Categoria
+                                </h3>
+                                <div className="bg-gray-50 p-4 rounded-lg">
+                                    {eventCategory.events &&
+                                    eventCategory.events.length > 0 ? (
+                                        <ul className="list-disc list-inside space-y-2">
+                                            {eventCategory.events.map(
+                                                (event) => (
+                                                    <li
+                                                        key={event.id}
+                                                        className="text-gray-800"
+                                                    >
+                                                        <Link
+                                                            href={route(
+                                                                "events.show",
+                                                                event.id
+                                                            )}
+                                                            className="text-indigo-600 hover:text-indigo-800 hover:underline"
+                                                        >
+                                                            {event.title}
+                                                        </Link>
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
+                                    ) : (
+                                        <p className="text-sm text-gray-500">
+                                            Nenhum evento está utilizando esta
+                                            categoria no momento.
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
