@@ -21,7 +21,7 @@ class InstituteController extends Controller
 
     public function index()
     {
-        $institutes = Institute::with('address')->latest()->paginate(10);
+        $institutes = Institute::with(['address', 'verifiedDoc'])->latest()->paginate(10);
 
         return Inertia::render('Institutes/Index', [
             'institutes' => $institutes,
@@ -42,7 +42,7 @@ class InstituteController extends Controller
 
     public function show(Institute $institute)
     {
-        $institute->load('address');
+        $institute->load(['address', 'verifiedDoc']);
 
         return Inertia::render('Institutes/Show', [
             'institute' => $institute,
@@ -51,7 +51,7 @@ class InstituteController extends Controller
 
     public function edit(Institute $institute)
     {
-        $institute->load('address');
+        $institute->load(['address', 'verifiedDoc']);
 
         return Inertia::render('Institutes/Edit', [
             'institute' => $institute,

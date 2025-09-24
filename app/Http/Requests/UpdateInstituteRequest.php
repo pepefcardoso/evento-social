@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class UpdateInstituteRequest extends FormRequest
 {
@@ -63,6 +64,12 @@ class UpdateInstituteRequest extends FormRequest
             'city' => ['sometimes', 'required', 'string', 'max:100'],
             'state' => ['sometimes', 'required', 'string', 'size:2'],
             'postal_code' => ['sometimes', 'required', 'string', 'size:8'],
+            'verified_doc.type' => ['sometimes', 'required', 'string', 'max:255'],
+            'verified_doc.file' => [
+                'sometimes',
+                'required',
+                File::types(['pdf', 'jpg', 'png'])->max(2 * 1024),
+            ],
         ];
     }
 
@@ -97,6 +104,10 @@ class UpdateInstituteRequest extends FormRequest
             'state.size' => 'O estado deve ter exatamente 2 caracteres.',
             'postal_code.required' => 'O CEP é obrigatório.',
             'postal_code.size' => 'O CEP deve ter 8 dígitos.',
+            'verified_doc.type.required' => 'O tipo de documento é obrigatório.',
+            'verified_doc.file.required' => 'O arquivo do documento é obrigatório.',
+            'verified_doc.file.types' => 'O documento deve ser dos tipos: PDF, JPG ou PNG.',
+            'verified_doc.file.max' => 'O tamanho do documento não pode exceder 2MB.',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 class StoreInstituteRequest extends FormRequest
 {
@@ -33,6 +34,24 @@ class StoreInstituteRequest extends FormRequest
             'telefone' => ['nullable', 'string', 'max:20'],
             'sobre' => ['nullable', 'string'],
             'website' => ['nullable', 'url', 'max:255'],
+            'street' => ['required', 'string', 'max:255'],
+            'number' => ['required', 'string', 'max:20'],
+            'complement' => ['nullable', 'string', 'max:100'],
+            'neighborhood' => ['required', 'string', 'max:100'],
+            'city' => ['required', 'string', 'max:100'],
+            'state' => ['required', 'string', 'size:2'],
+            'postal_code' => ['required', 'string', 'size:8'],
+            'verified_doc.type' => ['required', 'string', 'max:255'],
+            'verified_doc.file' => [
+                'required',
+                File::types(['pdf', 'jpg', 'png'])->max(2 * 1024),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
             'street.required' => 'A rua é obrigatória.',
             'street.max' => 'A rua não pode ter mais de 255 caracteres.',
             'number.required' => 'O número é obrigatório.',
@@ -46,6 +65,10 @@ class StoreInstituteRequest extends FormRequest
             'state.size' => 'O estado deve ter exatamente 2 caracteres.',
             'postal_code.required' => 'O CEP é obrigatório.',
             'postal_code.size' => 'O CEP deve ter 8 dígitos.',
+            'verified_doc.type.required' => 'O tipo de documento é obrigatório.',
+            'verified_doc.file.required' => 'O arquivo do documento é obrigatório.',
+            'verified_doc.file.types' => 'O documento deve ser dos tipos: PDF, JPG ou PNG.',
+            'verified_doc.file.max' => 'O tamanho do documento não pode exceder 2MB.',
         ];
     }
 }

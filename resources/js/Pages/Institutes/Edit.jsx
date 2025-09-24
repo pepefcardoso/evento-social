@@ -5,6 +5,12 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 
+const statusInfo = {
+    pending: { class: "bg-yellow-100 text-yellow-800", label: "Pendente" },
+    approved: { class: "bg-green-100 text-green-800", label: "Aprovado" },
+    rejected: { class: "bg-red-100 text-red-800", label: "Reprovado" },
+};
+
 export default function Edit({ institute }) {
     const { data, setData, put, processing, errors, reset } = useForm({
         razao_social: institute.razao_social || "",
@@ -13,54 +19,40 @@ export default function Edit({ institute }) {
         telefone: institute.telefone || "",
         sobre: institute.sobre || "",
         website: institute.website || "",
-        postal_code: institute.address?.postal_code || "",
-        street: institute.address?.street || "",
-        number: institute.address?.number || "",
-        complement: institute.address?.complement || "",
-        neighborhood: institute.address?.neighborhood || "",
-        city: institute.address?.city || "",
-        state: institute.address?.state || "",
+        address: {
+            postal_code: institute.address?.postal_code || "",
+            street: institute.address?.street || "",
+            number: institute.address?.number || "",
+            complement: institute.address?.complement || "",
+            neighborhood: institute.address?.neighborhood || "",
+            city: institute.address?.city || "",
+            state: institute.address?.state || "",
+        },
+        verified_doc: {
+            type: institute.verified_doc?.type || "",
+            file: null,
+        },
     });
 
     const submit = (e) => {
         e.preventDefault();
         put(route("institutes.update", institute.id), {
-            onFinish: () => {
-                if (Object.keys(errors).length > 0) {
-                    reset([
-                        "razao_social",
-                        "cnpj",
-                        "email",
-                        "telefone",
-                        "sobre",
-                        "website",
-                        "postal_code",
-                        "street",
-                        "number",
-                        "complement",
-                        "neighborhood",
-                        "city",
-                        "state",
-                    ]);
-                }
-            },
+            onSuccess: () => reset("verified_doc.file"),
         });
     };
 
-    const changed = () =>
-        data.razao_social !== institute.razao_social ||
-        data.cnpj !== institute.cnpj ||
-        data.email !== institute.email ||
-        data.telefone !== (institute.telefone || "") ||
-        data.sobre !== (institute.sobre || "") ||
-        data.website !== (institute.website || "") ||
-        data.postal_code !== (institute.address?.postal_code || "") ||
-        data.street !== (institute.address?.street || "") ||
-        data.number !== (institute.address?.number || "") ||
-        data.complement !== (institute.address?.complement || "") ||
-        data.neighborhood !== (institute.address?.neighborhood || "") ||
-        data.city !== (institute.address?.city || "") ||
-        data.state !== (institute.address?.state || "");
+    const renderStatusBadge = (status) => {
+        const info = status ? statusInfo[status] : null;
+        const className = info ? info.class : "bg-gray-100 text-gray-800";
+        const label = info ? info.label : "Não enviado";
+        return (
+            <span
+                className={`px-2 py-1 text-xs font-semibold rounded-full ${className}`}
+            >
+                {label}
+            </span>
+        );
+    };
 
     return (
         <AuthenticatedLayout
@@ -124,7 +116,11 @@ export default function Edit({ institute }) {
                                 </div>
                             </div>
 
-                            <form onSubmit={submit} className="space-y-6">
+                            <form
+                                onSubmit={submit}
+                                className="space-y-6"
+                                encType="multipart/form-data"
+                            >
                                 <div>
                                     <InputLabel
                                         htmlFor="razao_social"
@@ -241,24 +237,28 @@ export default function Edit({ institute }) {
                                     <div className="space-y-6">
                                         <div>
                                             <InputLabel
-                                                htmlFor="postal_code"
+                                                htmlFor="address.postal_code"
                                                 value="CEP"
                                             />
                                             <TextInput
-                                                id="postal_code"
-                                                name="postal_code"
-                                                value={data.postal_code}
+                                                id="address.postal_code"
+                                                name="address.postal_code"
+                                                value={data.address.postal_code}
                                                 className="mt-1 block w-full"
                                                 onChange={(e) =>
                                                     setData(
-                                                        "postal_code",
+                                                        "address.postal_code",
                                                         e.target.value
                                                     )
                                                 }
                                                 required
                                             />
                                             <InputError
-                                                message={errors.postal_code}
+                                                message={
+                                                    errors[
+                                                        "address.postal_code"
+                                                    ]
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -266,47 +266,51 @@ export default function Edit({ institute }) {
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div className="md:col-span-2">
                                                 <InputLabel
-                                                    htmlFor="street"
+                                                    htmlFor="address.street"
                                                     value="Rua"
                                                 />
                                                 <TextInput
-                                                    id="street"
-                                                    name="street"
-                                                    value={data.street}
+                                                    id="address.street"
+                                                    name="address.street"
+                                                    value={data.address.street}
                                                     className="mt-1 block w-full"
                                                     onChange={(e) =>
                                                         setData(
-                                                            "street",
+                                                            "address.street",
                                                             e.target.value
                                                         )
                                                     }
                                                     required
                                                 />
                                                 <InputError
-                                                    message={errors.street}
+                                                    message={
+                                                        errors["address.street"]
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
                                             <div>
                                                 <InputLabel
-                                                    htmlFor="number"
+                                                    htmlFor="address.number"
                                                     value="Número"
                                                 />
                                                 <TextInput
-                                                    id="number"
-                                                    name="number"
-                                                    value={data.number}
+                                                    id="address.number"
+                                                    name="address.number"
+                                                    value={data.address.number}
                                                     className="mt-1 block w-full"
                                                     onChange={(e) =>
                                                         setData(
-                                                            "number",
+                                                            "address.number",
                                                             e.target.value
                                                         )
                                                     }
                                                     required
                                                 />
                                                 <InputError
-                                                    message={errors.number}
+                                                    message={
+                                                        errors["address.number"]
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -315,17 +319,20 @@ export default function Edit({ institute }) {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <InputLabel
-                                                    htmlFor="neighborhood"
+                                                    htmlFor="address.neighborhood"
                                                     value="Bairro"
                                                 />
                                                 <TextInput
-                                                    id="neighborhood"
-                                                    name="neighborhood"
-                                                    value={data.neighborhood}
+                                                    id="address.neighborhood"
+                                                    name="address.neighborhood"
+                                                    value={
+                                                        data.address
+                                                            .neighborhood
+                                                    }
                                                     className="mt-1 block w-full"
                                                     onChange={(e) =>
                                                         setData(
-                                                            "neighborhood",
+                                                            "address.neighborhood",
                                                             e.target.value
                                                         )
                                                     }
@@ -333,30 +340,38 @@ export default function Edit({ institute }) {
                                                 />
                                                 <InputError
                                                     message={
-                                                        errors.neighborhood
+                                                        errors[
+                                                            "address.neighborhood"
+                                                        ]
                                                     }
                                                     className="mt-2"
                                                 />
                                             </div>
                                             <div>
                                                 <InputLabel
-                                                    htmlFor="complement"
+                                                    htmlFor="address.complement"
                                                     value="Complemento"
                                                 />
                                                 <TextInput
-                                                    id="complement"
-                                                    name="complement"
-                                                    value={data.complement}
+                                                    id="address.complement"
+                                                    name="address.complement"
+                                                    value={
+                                                        data.address.complement
+                                                    }
                                                     className="mt-1 block w-full"
                                                     onChange={(e) =>
                                                         setData(
-                                                            "complement",
+                                                            "address.complement",
                                                             e.target.value
                                                         )
                                                     }
                                                 />
                                                 <InputError
-                                                    message={errors.complement}
+                                                    message={
+                                                        errors[
+                                                            "address.complement"
+                                                        ]
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -365,40 +380,42 @@ export default function Edit({ institute }) {
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div className="md:col-span-2">
                                                 <InputLabel
-                                                    htmlFor="city"
+                                                    htmlFor="address.city"
                                                     value="Cidade"
                                                 />
                                                 <TextInput
-                                                    id="city"
-                                                    name="city"
-                                                    value={data.city}
+                                                    id="address.city"
+                                                    name="address.city"
+                                                    value={data.address.city}
                                                     className="mt-1 block w-full"
                                                     onChange={(e) =>
                                                         setData(
-                                                            "city",
+                                                            "address.city",
                                                             e.target.value
                                                         )
                                                     }
                                                     required
                                                 />
                                                 <InputError
-                                                    message={errors.city}
+                                                    message={
+                                                        errors["address.city"]
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
                                             <div>
                                                 <InputLabel
-                                                    htmlFor="state"
+                                                    htmlFor="address.state"
                                                     value="Estado (UF)"
                                                 />
                                                 <TextInput
-                                                    id="state"
-                                                    name="state"
-                                                    value={data.state}
+                                                    id="address.state"
+                                                    name="address.state"
+                                                    value={data.address.state}
                                                     className="mt-1 block w-full"
                                                     onChange={(e) =>
                                                         setData(
-                                                            "state",
+                                                            "address.state",
                                                             e.target.value
                                                         )
                                                     }
@@ -406,7 +423,9 @@ export default function Edit({ institute }) {
                                                     required
                                                 />
                                                 <InputError
-                                                    message={errors.state}
+                                                    message={
+                                                        errors["address.state"]
+                                                    }
                                                     className="mt-2"
                                                 />
                                             </div>
@@ -432,51 +451,106 @@ export default function Edit({ institute }) {
                                     />
                                 </div>
 
-                                {changed() && (
-                                    <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                        <h4 className="text-sm font-medium text-yellow-800 mb-2">
-                                            Preview das alterações:
-                                        </h4>
-                                        <div className="text-sm space-y-1">
-                                            <div>
-                                                <span className="font-medium">
-                                                    Razão Social:
-                                                </span>{" "}
-                                                <span className="text-red-600 line-through">
-                                                    {institute.razao_social}
-                                                </span>
-                                                <span className="mx-2">→</span>
-                                                <span className="text-green-600 font-medium">
-                                                    {data.razao_social}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span className="font-medium">
-                                                    CNPJ:
-                                                </span>{" "}
-                                                <span className="text-red-600 line-through">
-                                                    {institute.cnpj}
-                                                </span>
-                                                <span className="mx-2">→</span>
-                                                <span className="text-green-600 font-medium">
-                                                    {data.cnpj}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span className="font-medium">
-                                                    E-mail:
-                                                </span>{" "}
-                                                <span className="text-red-600 line-through">
-                                                    {institute.email}
-                                                </span>
-                                                <span className="mx-2">→</span>
-                                                <span className="text-green-600 font-medium">
-                                                    {data.email}
-                                                </span>
+                                <div className="pt-4 border-t mt-6">
+                                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                                        Documento de Verificação
+                                    </h3>
+
+                                    {institute.verified_doc ? (
+                                        <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                                <div className="col-span-2">
+                                                    <span className="font-medium">
+                                                        Status Atual:{" "}
+                                                    </span>
+                                                    {renderStatusBadge(
+                                                        institute.verified_doc
+                                                            .status
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium">
+                                                        Tipo:
+                                                    </span>{" "}
+                                                    {
+                                                        institute.verified_doc
+                                                            .type
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium">
+                                                        Arquivo:{" "}
+                                                    </span>
+                                                    <a
+                                                        href={`/storage/${institute.verified_doc.link}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-600 hover:underline"
+                                                    >
+                                                        Ver Documento Atual
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
+                                    ) : (
+                                        <div className="mb-6 p-4 text-center text-sm text-gray-500 bg-gray-50 rounded-lg border">
+                                            Nenhum documento de verificação foi
+                                            enviado.
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-6">
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="verified_doc.type"
+                                                value="Alterar Tipo de Documento"
+                                            />
+                                            <TextInput
+                                                id="verified_doc.type"
+                                                name="verified_doc.type"
+                                                value={data.verified_doc.type}
+                                                className="mt-1 block w-full"
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "verified_doc.type",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors["verified_doc.type"]
+                                                }
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="verified_doc.file"
+                                                value="Enviar Novo Documento (Opcional)"
+                                            />
+                                            <input
+                                                id="verified_doc.file"
+                                                name="verified_doc.file"
+                                                type="file"
+                                                className="mt-1 block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                accept=".pdf,image/*"
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "verified_doc.file",
+                                                        e.target.files[0]
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors["verified_doc.file"]
+                                                }
+                                                className="mt-2"
+                                            />
+                                        </div>
                                     </div>
-                                )}
+                                </div>
 
                                 <div className="flex items-center justify-end space-x-4">
                                     <Link
@@ -491,7 +565,7 @@ export default function Edit({ institute }) {
 
                                     <PrimaryButton
                                         className="ms-4"
-                                        disabled={processing || !changed()}
+                                        disabled={processing}
                                     >
                                         {processing
                                             ? "Salvando..."

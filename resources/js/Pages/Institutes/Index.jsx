@@ -2,6 +2,26 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
 
+const StatusBadge = ({ status }) => {
+    const statusInfo = {
+        approved: { class: "bg-green-100 text-green-800", label: "Aprovado" },
+        pending: { class: "bg-yellow-100 text-yellow-800", label: "Pendente" },
+        rejected: { class: "bg-red-100 text-red-800", label: "Reprovado" },
+    };
+
+    const info = status ? statusInfo[status] : null;
+    const className = info ? info.class : "bg-gray-100 text-gray-800";
+    const label = info ? info.label : "Não enviado";
+
+    return (
+        <span
+            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${className}`}
+        >
+            {label}
+        </span>
+    );
+};
+
 export default function Index({ institutes }) {
     const [isDeleting, setIsDeleting] = useState(null);
 
@@ -70,6 +90,9 @@ export default function Index({ institutes }) {
                                                     E-mail
                                                 </th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Status Verificação
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Data de Criação
                                                 </th>
                                                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -94,6 +117,15 @@ export default function Index({ institutes }) {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         {inst.email}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <StatusBadge
+                                                            status={
+                                                                inst
+                                                                    .verified_doc
+                                                                    ?.status
+                                                            }
+                                                        />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         {new Date(
