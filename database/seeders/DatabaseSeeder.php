@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SkillSeeder::class);
         $this->call(InstituteSeeder::class);
         $this->call(EventSeeder::class);
+        $this->call(EventCategorySeeder::class);
     }
 }
