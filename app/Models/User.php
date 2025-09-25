@@ -55,4 +55,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Skill::class);
     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    public function appliedSlots(): BelongsToMany
+    {
+        return $this->belongsToMany(EventSlot::class, 'applications');
+    }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
             $table->foreignId('role_id')->constrained()->cascadeOnDelete();
             $table->integer('amount');
-            $table->string('status')->default('aberta');
+            $table->string('status')->default('open');
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable();
             $table->text('details')->nullable();

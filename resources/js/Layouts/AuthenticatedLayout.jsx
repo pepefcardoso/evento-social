@@ -90,7 +90,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </NavLink>
                                 <NavLink
                                     href={route("event-categories.index")}
-                                    active={route().current("event-categories.*")}
+                                    active={route().current(
+                                        "event-categories.*"
+                                    )}
                                 >
                                     Categorias
                                 </NavLink>
@@ -99,6 +101,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current("roles.*")}
                                 >
                                     Funções
+                                </NavLink>
+                                <NavLink
+                                    href={route("applications.my")}
+                                    active={route().current("applications.*")}
+                                >
+                                    Minhas Candidaturas
                                 </NavLink>
                             </div>
                         </div>
@@ -244,6 +252,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         >
                             Funções
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("applications.my")}
+                            active={route().current("applications.*")}
+                        >
+                            Minhas Candidaturas
+                        </ResponsiveNavLink>
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">
@@ -267,6 +281,9 @@ export default function AuthenticatedLayout({ header, children }) {
                             <ResponsiveNavLink href={route("profile.edit")}>
                                 Perfil
                             </ResponsiveNavLink>
+                            <Dropdown.Link href={route("applications.my")}>
+                                Minhas Candidaturas
+                            </Dropdown.Link>
                             {emailNotVerified && (
                                 <ResponsiveNavLink
                                     href={route("verification.notice")}
