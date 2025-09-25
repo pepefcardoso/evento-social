@@ -51,7 +51,7 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
-        $event->load('institute', 'address', 'categories');
+        $event->load('institute', 'address', 'categories', 'eventSlots.role');
 
         return Inertia::render('Events/Show', [
             'event' => $event,

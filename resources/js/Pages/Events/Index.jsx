@@ -156,6 +156,16 @@ export default function Index({ events }) {
                                                         <div className="flex justify-end space-x-2">
                                                             <Link
                                                                 href={route(
+                                                                    "events.slots.index",
+                                                                    event.id
+                                                                )}
+                                                                className="text-green-600 hover:text-green-900"
+                                                            >
+                                                                Vagas
+                                                            </Link>
+
+                                                            <Link
+                                                                href={route(
                                                                     "events.show",
                                                                     event.id
                                                                 )}

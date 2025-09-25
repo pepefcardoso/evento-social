@@ -6,6 +6,7 @@ use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\EventSlotController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('events', EventController::class);
     Route::resource('event-categories', EventCategoryController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('events.slots', EventSlotController::class);
 });
 
 require __DIR__.'/auth.php';

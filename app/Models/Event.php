@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
@@ -44,5 +45,10 @@ class Event extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(EventCategory::class, 'event_event_category');
+    }
+
+    public function eventSlots(): HasMany
+    {
+        return $this->hasMany(EventSlot::class);
     }
 }
