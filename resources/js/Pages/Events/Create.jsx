@@ -111,7 +111,7 @@ export default function Create({ institutes }) {
                                                 key={institute.id}
                                                 value={institute.id}
                                             >
-                                                {institute.razao_social}
+                                                {institute.name}
                                             </option>
                                         ))}
                                     </select>

@@ -7,7 +7,7 @@ import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Create() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        razao_social: "",
+        name: "",
         cnpj: "",
         email: "",
         telefone: "",
@@ -65,19 +65,19 @@ export default function Create() {
                             >
                                 <div>
                                     <InputLabel
-                                        htmlFor="razao_social"
+                                        htmlFor="name"
                                         value="Razão Social"
                                     />
                                     <TextInput
-                                        id="razao_social"
-                                        name="razao_social"
-                                        value={data.razao_social}
+                                        id="name"
+                                        name="name"
+                                        value={data.name}
                                         className="mt-1 block w-full"
                                         autoComplete="off"
                                         isFocused={true}
                                         onChange={(e) =>
                                             setData(
-                                                "razao_social",
+                                                "name",
                                                 e.target.value
                                             )
                                         }
@@ -85,7 +85,7 @@ export default function Create() {
                                         required
                                     />
                                     <InputError
-                                        message={errors.razao_social}
+                                        message={errors.name}
                                         className="mt-2"
                                     />
                                 </div>

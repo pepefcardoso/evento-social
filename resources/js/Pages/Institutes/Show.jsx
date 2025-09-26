@@ -28,7 +28,7 @@ export default function Show({ auth, institute }) {
     const handleDelete = () => {
         if (
             confirm(
-                `Tem certeza que deseja deletar a instituição "${institute.razao_social}"?`
+                `Tem certeza que deseja deletar a instituição "${institute.name}"?`
             )
         ) {
             setIsDeleting(true);
@@ -70,7 +70,7 @@ export default function Show({ auth, institute }) {
                 </div>
             }
         >
-            <Head title={`Instituição: ${institute.razao_social}`} />
+            <Head title={`Instituição: ${institute.name}`} />
 
             <div className="py-12">
                 <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -87,7 +87,7 @@ export default function Show({ auth, institute }) {
                                                 Razão Social
                                             </dt>
                                             <dd className="mt-1 text-lg font-semibold">
-                                                {institute.razao_social}
+                                                {institute.name}
                                             </dd>
                                         </div>
                                         <div>
@@ -111,7 +111,7 @@ export default function Show({ auth, institute }) {
                                                 Telefone
                                             </dt>
                                             <dd className="mt-1 text-sm">
-                                                {institute.telefone ||
+                                                {institute.phone ||
                                                     "Não informado"}
                                             </dd>
                                         </div>

@@ -88,7 +88,7 @@ export default function Welcome({ auth, events, institutes }) {
                                                     <p className="text-sm text-gray-500 mb-1">
                                                         {
                                                             event.institute
-                                                                .razao_social
+                                                                .name
                                                         }
                                                     </p>
                                                     <h4 className="text-xl font-bold text-gray-900 mb-2">
@@ -150,7 +150,7 @@ export default function Welcome({ auth, events, institutes }) {
                                                 className="p-4 bg-white rounded-lg shadow-md"
                                             >
                                                 <p className="text-lg font-semibold text-gray-700">
-                                                    {institute.razao_social}
+                                                    {institute.name}
                                                 </p>
                                             </div>
                                         ))}

@@ -112,7 +112,7 @@ export default function Index({ events }) {
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         {
                                                             event.institute
-                                                                .razao_social
+                                                                .name
                                                         }
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

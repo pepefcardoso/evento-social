@@ -28,7 +28,7 @@ export default function Index({ institutes }) {
     const handleDelete = (institute) => {
         if (
             confirm(
-                `Tem certeza que deseja deletar a instituição "${institute.razao_social}"?`
+                `Tem certeza que deseja deletar a instituição "${institute.name}"?`
             )
         ) {
             setIsDeleting(institute.id);
@@ -110,7 +110,7 @@ export default function Index({ institutes }) {
                                                         {inst.id}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                        {inst.razao_social}
+                                                        {inst.name}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         {inst.cnpj}

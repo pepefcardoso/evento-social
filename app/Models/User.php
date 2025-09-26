@@ -83,4 +83,14 @@ class User extends Authenticatable
     {
         return $this->role === Role::VOLUNTEER;
     }
+
+    public function managedInstitute(): HasOne
+    {
+        return $this->hasOne(Institute::class);
+    }
+
+    public function canManageInstitute(): bool
+    {
+        return $this->isAdmin() || $this->isInstituteManager();
+    }
 }

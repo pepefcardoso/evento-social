@@ -110,7 +110,7 @@ export default function MyApplications({ applications }) {
                                                                 app.event_slot
                                                                     .event
                                                                     .institute
-                                                                    .razao_social
+                                                                    .name
                                                             }
                                                         </div>
                                                     </td>

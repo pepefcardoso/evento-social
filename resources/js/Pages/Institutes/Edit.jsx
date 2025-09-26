@@ -13,10 +13,10 @@ const statusInfo = {
 
 export default function Edit({ institute }) {
     const { data, setData, put, processing, errors, reset } = useForm({
-        razao_social: institute.razao_social || "",
+        name: institute.name || "",
         cnpj: institute.cnpj || "",
         email: institute.email || "",
-        telefone: institute.telefone || "",
+        telefone: institute.phone || "",
         sobre: institute.sobre || "",
         website: institute.website || "",
         address: {
@@ -59,7 +59,7 @@ export default function Edit({ institute }) {
             header={
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Editar Instituição: {institute.razao_social}
+                        Editar Instituição: {institute.name}
                     </h2>
                     <div className="flex space-x-2">
                         <Link
@@ -78,7 +78,7 @@ export default function Edit({ institute }) {
                 </div>
             }
         >
-            <Head title={`Editar: ${institute.razao_social}`} />
+            <Head title={`Editar: ${institute.name}`} />
 
             <div className="py-12">
                 <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -123,26 +123,26 @@ export default function Edit({ institute }) {
                             >
                                 <div>
                                     <InputLabel
-                                        htmlFor="razao_social"
+                                        htmlFor="name"
                                         value="Razão Social"
                                     />
                                     <TextInput
-                                        id="razao_social"
-                                        name="razao_social"
-                                        value={data.razao_social}
+                                        id="name"
+                                        name="name"
+                                        value={data.name}
                                         className="mt-1 block w-full"
                                         autoComplete="off"
                                         isFocused={true}
                                         onChange={(e) =>
                                             setData(
-                                                "razao_social",
+                                                "name",
                                                 e.target.value
                                             )
                                         }
                                         required
                                     />
                                     <InputError
-                                        message={errors.razao_social}
+                                        message={errors.name}
                                         className="mt-2"
                                     />
                                 </div>

@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\Models\Institute;
+use App\Models\User;
+use App\Enums\Role;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class InstituteService
 {
@@ -17,15 +20,28 @@ class InstituteService
         $this->verifiedDocService = $verifiedDocService;
     }
 
-    public function createInstitute(array $validatedData): Institute
+    public function createInstituteWithManager(array $validatedData): Institute
     {
         $addressData = $validatedData['address'];
         $verifiedDocData = $validatedData['verified_doc'];
-        $instituteData = Arr::except($validatedData, ['address', 'verified_doc']);
+        $managerData = $validatedData['manager'];
+        $instituteData = Arr::except($validatedData, ['address', 'verified_doc', 'manager']);
 
-        return DB::transaction(function () use ($addressData, $verifiedDocData, $instituteData) {
+        return DB::transaction(function () use ($addressData, $verifiedDocData, $managerData, $instituteData) {
+            $manager = User::create([
+                'name' => $managerData['name'],
+                'email' => $managerData['email'],
+                'password' => Hash::make($managerData['password']),
+                'birth_date' => $managerData['birth_date'],
+                'phone' => $managerData['phone'],
+                'role' => Role::INSTITUTE_MANAGER,
+            ]);
+
             $address = $this->addressService->findOrCreate($addressData);
+
             $instituteData['address_id'] = $address->id;
+            $instituteData['user_id'] = $manager->id;
+            $instituteData['status'] = 'pending';
 
             $institute = Institute::create($instituteData);
 
@@ -35,23 +51,23 @@ class InstituteService
         });
     }
 
-    public function updateInstitute(Institute $institute, array $validatedData): void
+    public function approveInstitute(Institute $institute, User $approver): void
     {
-        $addressData = $validatedData['address'] ?? [];
-        $verifiedDocData = $validatedData['verified_doc'] ?? [];
-        $instituteData = Arr::except($validatedData, ['address', 'verified_doc']);
+        $institute->update([
+            'status' => 'approved',
+            'approved_by_user_id' => $approver->id,
+            'approved_at' => now(),
+            'rejection_reason' => null,
+        ]);
+    }
 
-        DB::transaction(function () use ($institute, $addressData, $verifiedDocData, $instituteData) {
-            if (!empty($addressData)) {
-                $address = $this->addressService->findOrCreate($addressData);
-                $instituteData['address_id'] = $address->id;
-            }
-
-            $institute->update($instituteData);
-
-            if (!empty($verifiedDocData)) {
-                $this->verifiedDocService->handleUploadAndCreateOrUpdate($institute, $verifiedDocData);
-            }
-        });
+    public function rejectInstitute(Institute $institute, User $rejector, string $reason): void
+    {
+        $institute->update([
+            'status' => 'rejected',
+            'approved_by_user_id' => $rejector->id,
+            'approved_at' => now(),
+            'rejection_reason' => $reason,
+        ]);
     }
 }

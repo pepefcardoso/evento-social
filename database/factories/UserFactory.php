@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
 use App\Models\Skill;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,7 +28,8 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'birth_date' => fake()->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
-            'phone' => fake()->phoneNumber(),
+            'phone' => preg_replace('/\D+/', '', fake()->phoneNumber()),
+            'role' => Role::VOLUNTEER,
         ];
     }
 
@@ -38,14 +40,27 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => Role::ADMIN,
+        ]);
+    }
+
+    public function instituteManager(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => Role::INSTITUTE_MANAGER,
+        ]);
+    }
+
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-            $skillIds = Skill::inRandomOrder()->limit(rand(1, 5))->pluck('id');
-            $user->skills()->attach($skillIds);
+            if ($user->isVolunteer()) {
+                $skillIds = Skill::query()->inRandomOrder()->limit(rand(1, 5))->pluck('id');
+                $user->skills()->attach($skillIds);
+            }
         });
     }
 }

@@ -65,7 +65,7 @@ export default function Show({ event }) {
                                                 )}
                                                 className="ml-1 text-indigo-600 hover:underline"
                                             >
-                                                {event.institute.razao_social}
+                                                {event.institute.name}
                                             </Link>
                                         </span>
                                     </div>

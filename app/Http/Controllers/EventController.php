@@ -34,7 +34,7 @@ class EventController extends Controller
 
     public function create()
     {
-        $institutes = Institute::orderBy('razao_social')->get();
+        $institutes = Institute::orderBy('name')->get();
         $allCategories = EventCategory::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Events/Create', [
@@ -62,7 +62,7 @@ class EventController extends Controller
     {
         $event->load('institute', 'address', 'categories');
 
-        $institutes = Institute::orderBy('razao_social')->get();
+        $institutes = Institute::orderBy('name')->get();
         $allCategories = EventCategory::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Events/Edit', [

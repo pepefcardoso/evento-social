@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Institute;
 use App\Http\Requests\StoreInstituteRequest;
 use App\Http\Requests\UpdateInstituteRequest;
+use App\Http\Requests\InstituteApprovalRequest;
 use App\Services\InstituteService;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -21,7 +22,7 @@ class InstituteController extends Controller
 
     public function index()
     {
-        $institutes = Institute::with(['address', 'verifiedDoc'])->latest()->paginate(10);
+        $institutes = Institute::with(['address', 'user','verifiedDoc'])->latest()->paginate(10);
 
         return Inertia::render('Institutes/Index', [
             'institutes' => $institutes,
@@ -70,5 +71,24 @@ class InstituteController extends Controller
         $institute->delete();
 
         return Redirect::route('institutes.index')->with('message', 'Instituição removida com sucesso!');
+    }
+
+    public function approval(InstituteApprovalRequest $request, Institute $institute)
+    {
+        $action = $request->input('action');
+
+        if ($action === 'approve') {
+            $this->instituteService->approveInstitute($institute, auth()->user());
+            $message = 'Instituição aprovada com sucesso!';
+        } else {
+            $this->instituteService->rejectInstitute(
+                $institute,
+                auth()->user(),
+                $request->input('rejection_reason')
+            );
+            $message = 'Instituição rejeitada.';
+        }
+
+        return Redirect::back()->with('message', $message);
     }
 }

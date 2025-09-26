@@ -10,13 +10,17 @@ return new class extends Migration
     {
         Schema::create('institutes', function (Blueprint $table) {
             $table->id();
-            $table->string('razao_social');
+            $table->string('name');
             $table->string('cnpj')->unique();
-            $table->string('email')->unique();
-            $table->string('telefone')->nullable();
-            $table->text('sobre')->nullable();
+            $table->string('phone')->nullable();
+            $table->text('description')->nullable();
             $table->string('website')->nullable();
             $table->foreignId('address_id')->nullable()->constrained('addresses')->onDelete('set null');
+            $table->foreignId('user_id')->nullable()->unique()->constrained('users')->onDelete('cascade');
+            $table->enum('status', InstituteStatus::values())->default(InstituteStatus::PENDING->value);
+            $table->foreignId('approved_by_user_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->timestamp('approved_at')->nullable();
+            $table->text('rejection_reason')->nullable();
             $table->timestamps();
         });
     }

@@ -71,6 +71,9 @@ Route::middleware('auth')->group(function () {
         ->name('applications.approve');
     Route::patch('/applications/{application}/reject', [ApplicationController::class, 'reject'])
         ->name('applications.reject');
+
+    Route::patch('/institutes/{institute}/approval', [InstituteController::class, 'approval'])
+        ->name('institutes.approval');
 });
 
 require __DIR__.'/auth.php';
