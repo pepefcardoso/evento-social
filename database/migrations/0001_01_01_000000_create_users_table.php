@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->date('birth_date')->nullable();
             $table->string('phone', 11)->nullable();
+            $table->enum('role', Role::values())->default(Role::VOLUNTEER->value);
             $table->rememberToken();
             $table->timestamps();
         });
